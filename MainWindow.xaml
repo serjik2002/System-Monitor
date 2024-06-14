@@ -3,193 +3,365 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:System_Monitor"
-        xmlns:linechart="clr-namespace:System_Monitor"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280">
+        Title="MainWindow" Height="720" Width="1280" Background="White">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50*" />
-            <ColumnDefinition Width="39*" />
-            <ColumnDefinition Width="39*" />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0*" />
+            <ColumnDefinition/>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <!--CPU usage-->
-        <GroupBox Header="CPU" Margin="5" Height="335">
-            <Grid Height="Auto">
+        <GroupBox Header="CPU Usage" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,426,0">
+            <Grid Margin="5">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
+                </Grid.Effect>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Border1}" />
+                </Grid.OpacityMask>
+                <Grid.Resources>
+                    <Style TargetType="lvc:LineSeries">
+                        <Setter Property="StrokeThickness" Value="3" />
+                        <Setter Property="Stroke" Value="White" />
+                        <Setter Property="Fill" Value="#4EFFFFFF" />
+                        <Setter Property="PointGeometrySize" Value="0" />
+                        <Setter Property="LineSmoothness" Value="0.3" />
+                    </Style>
+                    <Style TargetType="lvc:Axis">
+                        <Setter Property="ShowLabels" Value="True" />
+                        <Setter Property="IsEnabled" Value="True" />
+                    </Style>
+                </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-
-                <ProgressBar Grid.Row="0" Value="48" Height="10" Margin="5" Foreground="#FF2584ED"/>
-
-                <Grid Grid.Row="1" Margin="5">
-                    <lvc:CartesianChart Name="CpuChart" Series="{Binding CpuSeries}">
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="%" MinValue="0" MaxValue="100">
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-
-                    <Grid VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="5" Width="200" Height="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-
-                    </Grid>
-                </Grid>
-
-                <Grid Grid.Row="2" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="Processor Time" />
-                    <TextBlock Grid.Column="1" Text="OS" Margin="40,0" />
-                    <TextBlock Grid.Column="2" Text="User" Margin="40,0" />
-                    <TextBlock Grid.Column="0" Text="{Binding ProcessorTime}" />
-                    <TextBlock Grid.Column="1" Text="{Binding OsTime}" Margin="10,0" />
-                    <TextBlock Grid.Column="2" Text="{Binding UserTime}" Margin="10,0" />
-                </Grid>
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Grid.Column="1" Grid.Row="0" Header="GPU Usage" Margin="5,5,5,5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <ProgressBar Grid.Row="0" Height="10" Margin="5" Foreground="#FF2584ED" Value="73" />
-
-                <lvc:CartesianChart Grid.Row="1" Series="{Binding GpuSeries}" Margin="5">
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="%" MinValue="0" MaxValue="100">
-                        </lvc:Axis>
-                    </lvc:CartesianChart.AxisY>
+                <Border x:Name="Border1" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
+                <Border Grid.Row="0" Grid.RowSpan="3" Background="#FF2193CE" />
+                <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
+            CPU Load
+                </TextBlock>
+                <lvc:CartesianChart Grid.Row="2" Margin="0,0,0,0" Series="{Binding CpuLoadSeries}" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True">
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Labels="{Binding GpuLabels}">
+                        <lvc:Axis MinValue="0" MaxValue="20" Title="Time">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"/>
+                            </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0" MaxValue="100" Title="Usage (%)">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="10"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
-
-                <TextBlock Grid.Row="2" Text="{Binding GpuUsagePercentage, StringFormat={}{0:F1}%}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5" />
-            </Grid>
-
-        </GroupBox>
-        <GroupBox Grid.Column="2" Grid.Row="0" Header="Ram Usage" Margin="5,5,5,5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <ProgressBar Grid.Row="0" Height="10" Margin="5" Foreground="#FF2584ED" Value="25" />
-
-                <Grid Grid.Row="1" Margin="5">
-                    <lvc:CartesianChart Series="{Binding RamSeries}">
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Title="GB" LabelFormatter="{Binding RamYAxisFormatter}">
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                </Grid>
-
-                <Grid Grid.Row="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Used" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    <TextBlock Grid.Column="1" Text="Free" HorizontalAlignment="Center" VerticalAlignment="Center" />
-
-                    <TextBlock Grid.Column="0" Text="{Binding UsedRam}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5" />
-                    <TextBlock Grid.Column="1" Text="{Binding FreeRam}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,5" />
-                </Grid>
-            </Grid>
-        </GroupBox>
-
-
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Disc" Margin="5,5,5,5" >
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
-                    <TextBlock Text="Total:" VerticalAlignment="Center" />
-                    <ProgressBar Value="{Binding TotalDiskUsagePercentage}" Width="200" Height="15" Margin="5,0" />
-                    <TextBlock Text="{Binding TotalDiskUsagePercentage, StringFormat={}{0:F1}%}" VerticalAlignment="Center" Margin="5,0" />
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25,0">
+                    <TextBlock Opacity=".4" FontSize="13">CPU Frequency and Temperature</TextBlock>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Frequency: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuFrequency, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GHz</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Temperature: " Margin="8, 6"/>
+                        <!-- Corrected binding to CpuTemperature -->
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuTemperature, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">°C</TextBlock>
+                    </StackPanel>
                 </StackPanel>
-
-                <ItemsControl Grid.Row="1" ItemsSource="{Binding Disks}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Text="{Binding Name}" Width="50" VerticalAlignment="Center" />
-                                <ProgressBar Value="{Binding UsagePercentage}" Width="200" Height="15" Margin="5,0" />
-                                <TextBlock Text="{Binding UsagePercentage, StringFormat={}{0:F1}%}" VerticalAlignment="Center" Margin="5,0" />
-                                <TextBlock Text="{Binding UsedSpace, StringFormat={}{0:F1} GB / {1:F1} GB}" VerticalAlignment="Center" Margin="5,0" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Column="2" Grid.Row="1" Header="Ethernet" Margin="5,5,5,5">
-            <Grid>
+
+
+
+
+        <GroupBox Header="GPU Usage" Grid.Row="0" Grid.Column="2">
+            <Grid Margin="5">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
+                </Grid.Effect>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Border1}" />
+                </Grid.OpacityMask>
+                <Grid.Resources>
+                    <Style TargetType="lvc:LineSeries">
+                        <Setter Property="StrokeThickness" Value="3" />
+                        <Setter Property="Stroke" Value="White" />
+                        <Setter Property="Fill" Value="#4EFFFFFF" />
+                        <Setter Property="PointGeometrySize" Value="0" />
+                        <Setter Property="LineSmoothness" Value="0.3" />
+                    </Style>
+                    <Style TargetType="lvc:Axis">
+                        <Setter Property="ShowLabels" Value="True" />
+                        <Setter Property="IsEnabled" Value="True" />
+                    </Style>
+                </Grid.Resources>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="5">
-                        <TextBlock Text="Download:" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding DownloadSpeed, StringFormat={}{0:F1} Mbps}" VerticalAlignment="Center" Margin="5,0" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5">
-                        <TextBlock Text="Upload:" VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding UploadSpeed, StringFormat={}{0:F1} Mbps}" VerticalAlignment="Center" Margin="5,0" />
-                    </StackPanel>
-                </Grid>
-
-                <lvc:CartesianChart Grid.Row="1" Series="{Binding EthernetSeries}" Margin="5">
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="Mbps" LabelFormatter="{Binding EthernetYAxisFormatter}">
-                        </lvc:Axis>
-                    </lvc:CartesianChart.AxisY>
+                <Border x:Name="Border3" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
+                <Border Grid.Row="0" Grid.RowSpan="3" Background="#4CAF50" />
+                <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
+            GPU Load
+                </TextBlock>
+                <!-- Replace with your GPU-specific chart component -->
+                <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series="{Binding GpuLoadSeries}" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True">
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Labels="{Binding EthernetLabels}">
+                        <lvc:Axis MinValue="0" MaxValue="20" Title="Time">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"/>
+                            </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0" MaxValue="100" Title="Usage (%)" >
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="10"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
+                    <TextBlock Opacity=".4" FontSize="13">GPU Memory and Frequency</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Total Memory: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuTotalMemorySeries}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Frequency: " Margin="8, 6"/>
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuFrequencySeries, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GHz</TextBlock>
+                    </StackPanel>
+                </StackPanel>
             </Grid>
+        </GroupBox>
+
+
+        <!-- Блок для загрузки RAM -->
+        <GroupBox Header="RAM Usage" Grid.Row="0" Grid.Column="3">
+            <Grid Margin="5">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
+                </Grid.Effect>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Border1}" />
+                </Grid.OpacityMask>
+                <Grid.Resources>
+                    <Style TargetType="lvc:LineSeries">
+                        <Setter Property="StrokeThickness" Value="3" />
+                        <Setter Property="Stroke" Value="White" />
+                        <Setter Property="Fill" Value="#4EFFFFFF" />
+                        <Setter Property="PointGeometrySize" Value="0" />
+                        <Setter Property="LineSmoothness" Value="0.3" />
+                    </Style>
+                    <Style TargetType="lvc:Axis">
+                        <Setter Property="ShowLabels" Value="True" />
+                        <Setter Property="IsEnabled" Value="True" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border x:Name="Border6" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
+                <Border Grid.Row="0" Grid.RowSpan="3" Background="#9C27B0 " />
+                <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
+            RAM Load
+                </TextBlock>
+                <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series="{Binding RamLoadSeries}" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis MinValue="0" MaxValue="20" Title="Time">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0" MaxValue="32" Title="Usage (GB)" >
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="4"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
+                    <TextBlock Opacity=".4" FontSize="13">RAM Total and Used</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Total Memory: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding RamTotalMemory}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Used Memory: " Margin="8, 6"/>
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding RamUsedMemory}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- Нижний ряд -->
+        <GroupBox Header="Ethernet Usage" Grid.Row="1" Grid.Column="1">
+            <Grid Margin="5">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
+                </Grid.Effect>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Border1}" />
+                </Grid.OpacityMask>
+                <Grid.Resources>
+                    <Style TargetType="lvc:LineSeries">
+                        <Setter Property="StrokeThickness" Value="3" />
+                        <Setter Property="Stroke" Value="White" />
+                        <Setter Property="Fill" Value="#4EFFFFFF" />
+                        <Setter Property="PointGeometrySize" Value="0" />
+                        <Setter Property="LineSmoothness" Value="0.3" />
+                    </Style>
+                    <Style TargetType="lvc:Axis">
+                        <Setter Property="ShowLabels" Value="True" />
+                        <Setter Property="IsEnabled" Value="True" />
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border x:Name="Border7" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
+                <Border Grid.Row="0" Grid.RowSpan="3" Background="#FF9800 " />
+                <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
+            Ethernet Speed
+                </TextBlock>
+                <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series="{Binding EthernetSpeedSeries}" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis MinValue="0" MaxValue="20" Title="Time">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis MinValue="0" MaxValue="1000" Title="Speed (Mbps)" >
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="100"/>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
+                    <TextBlock Opacity=".4" FontSize="13">Download and Upload Speed</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Download Speed: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding DownloadSpeedSeries}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">Mbps</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Upload Speed: " Margin="8, 6"/>
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding UploadSpeedSeries}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">Mbps</TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+
+        <GroupBox Header="Disk Space Usage" Grid.Row="1" Grid.Column="2" Margin="10">
+            <Grid Margin="10">
+                <Grid.Effect>
+                    <DropShadowEffect BlurRadius="15" Direction="-90" RenderingBias="Quality" Opacity=".2" ShadowDepth="1"/>
+                </Grid.Effect>
+                <Grid.OpacityMask>
+                    <VisualBrush Visual="{Binding ElementName=Border5}" />
+                </Grid.OpacityMask>
+                <Grid.Resources>
+                    <Style TargetType="lvc:Gauge">
+                        <Setter Property="Width" Value="120" />
+                        <Setter Property="Height" Value="120" />
+                        <Setter Property="From" Value="0" />
+                        <Setter Property="To" Value="100" />
+                        <Setter Property="Value" Value="30" />
+                        <Setter Property="LabelsVisibility" Value="Collapsed" />
+                        <Setter Property="GaugeActiveFill">
+                            <Setter.Value>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="Yellow" Offset="0.0" />
+                                    <GradientStop Color="Orange" Offset="0.5" />
+                                    <GradientStop Color="Red" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border x:Name="Border5" Grid.Row="0" Grid.RowSpan="4" CornerRadius="5" Background="White" />
+                <Border Grid.Row="0" Grid.RowSpan="3" Background="#2196F3" />
+                <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
+            Disk Space
+                </TextBlock>
+                <ComboBox Margin="112,35,113,3" Width="150"
+                  ItemsSource="{Binding DiskDrives}" SelectedItem="{Binding SelectedDisk}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <lvc:Gauge Grid.Row="1" Margin="127,2,128,13" Uses360Mode="True" FromColor="#FF1A37D4" Grid.RowSpan="2">
+                    <lvc:Gauge.GaugeActiveFill>
+                        <LinearGradientBrush>
+                            <GradientStop Color="Yellow" Offset="0.0" />
+                            <GradientStop Color="Orange" Offset="0.5" />
+                            <GradientStop Color="Red" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </lvc:Gauge.GaugeActiveFill>
+                    <lvc:Gauge.Value>
+                        <Binding Path="SelectedDisk.UsagePercentage" />
+                    </lvc:Gauge.Value>
+                </lvc:Gauge>
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
+                    <TextBlock Opacity=".4" FontSize="13">Disk Usage</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Used Space: " Margin="8, 6"/>
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.UsedSpace}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Total Space: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.TotalSpace}" />
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Block 6" Grid.Column="2" Grid.ColumnSpan="2" Margin="426,352,0,0" Grid.RowSpan="2">
+            <!-- Содержимое блока 6 -->
         </GroupBox>
     </Grid>
+
 
 </Window>

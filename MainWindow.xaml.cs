@@ -20,9 +20,19 @@ namespace System_Monitor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MetricsViewModel ViewModel { get; }
         public MainWindow()
         {
             InitializeComponent();
+            ViewModel = new MetricsViewModel();
+            DataContext = ViewModel;
+            ViewModel.StartAsync();
         }
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            ViewModel.Stop();
+        }
+
     }
 }
