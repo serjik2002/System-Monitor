@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System_Monitor.CodeBase;
 
 namespace System_Monitor
 {
@@ -20,12 +21,24 @@ namespace System_Monitor
     /// </summary>
     public partial class MainWindow : Window
     {
+        public MetricsViewModel ViewModel { get; }
         public MainWindow()
         {
             InitializeComponent();
-            
+            ViewModel = new MetricsViewModel();
+            DataContext = ViewModel;
+            ViewModel.StartAsync();
         }
-
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+            ViewModel.Stop();
+        }
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settingsWindow = new Settings();
+            settingsWindow.ShowDialog();
+        }
 
     }
 }

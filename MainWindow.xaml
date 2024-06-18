@@ -71,13 +71,13 @@
                     <TextBlock Opacity=".4" FontSize="13">CPU Frequency and Temperature</TextBlock>
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Frequency: " Margin="8, 6" />
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuFrequency, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuFrequency, StringFormat={}{0:N1}}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GHz</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Margin="0,5">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Temperature: " Margin="8, 6"/>
                         <!-- Corrected binding to CpuTemperature -->
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuTemperature, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding CpuTemperature, StringFormat={}{0:N1}}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">°C</TextBlock>
                     </StackPanel>
                 </StackPanel>
@@ -86,7 +86,7 @@
 
 
 
-
+        <!--GPU -->
         <GroupBox Header="GPU Usage" Grid.Row="0" Grid.Column="2">
             <Grid Margin="5">
                 <Grid.Effect>
@@ -98,7 +98,7 @@
                 <Grid.Resources>
                     <Style TargetType="lvc:LineSeries">
                         <Setter Property="StrokeThickness" Value="3" />
-                        <Setter Property="Stroke" Value="White" />
+                        <Setter Property="Stroke" Value="white" />
                         <Setter Property="Fill" Value="#4EFFFFFF" />
                         <Setter Property="PointGeometrySize" Value="0" />
                         <Setter Property="LineSmoothness" Value="0.3" />
@@ -139,13 +139,13 @@
                 <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
                     <TextBlock Opacity=".4" FontSize="13">GPU Memory and Frequency</TextBlock>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Foreground="#303030" FontSize="20" Text="Total Memory: " Margin="8, 6" />
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuTotalMemorySeries}" />
-                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
+                        <TextBlock Foreground="#303030" FontSize="20" Text="Temperature: " Margin="8, 6" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuTemperature}" Margin="8, 6"/>
+                        <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">°C</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Frequency: " Margin="8, 6"/>
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuFrequencySeries, StringFormat={}{0:N1}}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding GpuFrequency}" Margin="8, 6" />
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GHz</TextBlock>
                     </StackPanel>
                 </StackPanel>
@@ -206,12 +206,12 @@
                     <TextBlock Opacity=".4" FontSize="13">RAM Total and Used</TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Total Memory: " Margin="8, 6" />
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding RamTotalMemory}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding TotalMemory}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Used Memory: " Margin="8, 6"/>
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding RamUsedMemory}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding UsedMemory}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
                     </StackPanel>
                 </StackPanel>
@@ -251,7 +251,7 @@
                 <TextBlock Grid.Row="0" TextAlignment="Center" Padding="10, 10, 0, 5" Foreground="White" FontSize="18">
             Ethernet Speed
                 </TextBlock>
-                <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series="{Binding EthernetSpeedSeries}" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True">
+                <lvc:CartesianChart Grid.Row="2" Margin="0, 0, 0, 0" Series = "{Binding DownloadSpeedSeries}" LegendLocation="Bottom" Hoverable="True" DataTooltip="{x:Null}" DisableAnimations="True" Zoom="Y" >
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis MinValue="0" MaxValue="20" Title="Time">
                             <lvc:Axis.Separator>
@@ -259,24 +259,25 @@
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis MinValue="0" MaxValue="1000" Title="Speed (Mbps)" >
-                            <lvc:Axis.Separator>
-                                <lvc:Separator Step="100"/>
+                    <lvc:CartesianChart.AxisY >
+                        <lvc:Axis MinValue="0" Title="Speed (Mbps)"  >
+                            <lvc:Axis.Separator >
+                                <lvc:Separator Step="10"/>
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
+                
                 <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
                     <TextBlock Opacity=".4" FontSize="13">Download and Upload Speed</TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Download Speed: " Margin="8, 6" />
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding DownloadSpeedSeries}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding DownloadSpeed}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">Mbps</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Upload Speed: " Margin="8, 6"/>
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding UploadSpeedSeries}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding UploadSpeed}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">Mbps</TextBlock>
                     </StackPanel>
                 </StackPanel>
@@ -326,7 +327,7 @@
                   ItemsSource="{Binding DiskDrives}" SelectedItem="{Binding SelectedDisk}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding}" />
+                            <TextBlock Text="{Binding Name}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -339,27 +340,29 @@
                         </LinearGradientBrush>
                     </lvc:Gauge.GaugeActiveFill>
                     <lvc:Gauge.Value>
-                        <Binding Path="SelectedDisk.UsagePercentage" />
+                        <Binding Path="SelectedDisk.UsagePercentage" StringFormat="{}{0:F1}"/>
                     </lvc:Gauge.Value>
                 </lvc:Gauge>
                 <StackPanel Grid.Row="3" VerticalAlignment="Center" Margin="25, 0">
                     <TextBlock Opacity=".4" FontSize="13">Disk Usage</TextBlock>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Used Space: " Margin="8, 6"/>
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.UsedSpace}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.UsedSpace}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Foreground="#303030" FontSize="20" Text="Total Space: " Margin="8, 6" />
-                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.TotalSpace}" />
+                        <TextBlock Foreground="#303030" FontSize="20" Text="{Binding SelectedDisk.TotalSpace}" Margin="8, 6"/>
                         <TextBlock Foreground="#303030" FontSize="20" VerticalAlignment="Bottom" Margin="8, 6">GB</TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Block 6" Grid.Column="2" Grid.ColumnSpan="2" Margin="426,352,0,0" Grid.RowSpan="2">
-            <!-- Содержимое блока 6 -->
+        <GroupBox Header="Settings" Grid.Column="2" Grid.ColumnSpan="2" Margin="426,352,0,0" Grid.RowSpan="2">
+            <Grid>
+                <Button Content="Settings" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="100" Click="SettingsButton_Click"/>
+            </Grid>
         </GroupBox>
     </Grid>
 

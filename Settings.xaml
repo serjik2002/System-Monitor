@@ -1,0 +1,115 @@
+﻿<Window x:Class="System_Monitor.CodeBase.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:System_Monitor.CodeBase"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="800">
+    <Grid>
+        <TabControl>
+            <!-- Вкладка для общих настроек -->
+            <TabItem Header="General Settings">
+                <Grid Margin="10">
+                    <StackPanel>
+                        <CheckBox Content="Auto Start" Margin="5"/>
+                        <CheckBox Content="Show in System Tray" Margin="5"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка для настроек мониторинга -->
+            <TabItem Header="Monitoring Settings">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Content="Memory Unit:" Margin="5" />
+                        <ComboBox Width="150"
+                      ItemsSource="{Binding MemoryUnits}"
+                      SelectedItem="{Binding SelectedMemoryUnit}"
+                      Margin="5" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Content="Speed Unit:" Margin="5, 5, 17, 5" />
+                        <ComboBox Width="150"
+                      ItemsSource="{Binding SpeedUnits}"
+                      SelectedItem="{Binding SelectedSpeedUnit}"
+                      Margin="5" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка для настроек оповещений -->
+            <TabItem Header="Notification Settings">
+                <Grid Margin="10">
+                    <StackPanel>
+                        <!-- Enable/Disable Notifications -->
+                        <CheckBox Content="Enable Notifications" IsChecked="{Binding IsNotificationsEnabled}" Margin="5"/>
+
+                        <!-- Notification Types -->
+                        <Label Content="Notification Types:" Margin="5"/>
+                        <ListBox Width="200" Height="100" Margin="5"
+                     ItemsSource="{Binding NotificationTypes}"
+                     DisplayMemberPath="Name"/>
+
+                        <!-- Notification Levels -->
+                        <Label Content="Notification Levels:" Margin="5"/>
+                        <ComboBox Width="150" Margin="5"
+                      ItemsSource="{Binding NotificationLevels}"
+                      SelectedItem="{Binding SelectedNotificationLevel}"
+                      DisplayMemberPath="Name"/>
+
+                        <!-- Notification Threshold -->
+                        <Label Content="Notification Threshold:" Margin="5"/>
+                        <Slider Value="{Binding NotificationThreshold}" Minimum="0" Maximum="100" TickFrequency="10" Margin="5"/>
+
+                        <!-- Notification Schedule -->
+                        <Label Content="Notification Schedule:" Margin="5"/>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <DatePicker SelectedDate="{Binding NotificationStartDate}" Width="150"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка для настроек логирования -->
+            <TabItem Header="Logging Settings">
+                <Grid Margin="10">
+                    <StackPanel>
+                        <!-- Log File Path -->
+                        <Label Content="Log File Path:" Margin="5"/>
+                        <TextBox Text="{Binding LogFilePath}" Width="300" Margin="5"/>
+                        <Button Content="Browse" Width="80" Margin="5"/>
+
+                        <!-- Log Level -->
+                        <Label Content="Log Level:" Margin="5"/>
+                        <ComboBox Width="150" Margin="5"
+                      ItemsSource="{Binding LogLevels}"
+                      SelectedItem="{Binding SelectedLogLevel}"
+                      DisplayMemberPath="Name"/>
+
+                        <!-- Log Rotation Settings (if applicable) -->
+                        <Label Content="Log Rotation Settings:" Margin="5"/>
+                        <CheckBox Content="Enable Log Rotation" IsChecked="{Binding IsLogRotationEnabled}" Margin="5"/>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Label Content="Max File Size:" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding MaxLogFileSize}" Width="100" Margin="5"/>
+                            <Label Content="MB" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Кнопки для сохранения и отмены изменений -->
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" Orientation="Horizontal" Margin="10">
+            <Button Content="Save" Width="100" Margin="5"/>
+            <Button Content="Cancel" Width="100" Margin="5"/>
+        </StackPanel>
+    </Grid>
+</Window>
