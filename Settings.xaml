@@ -12,8 +12,8 @@
             <TabItem Header="General Settings">
                 <Grid Margin="10">
                     <StackPanel>
-                        <CheckBox Content="Auto Start" Margin="5"/>
-                        <CheckBox Content="Show in System Tray" Margin="5"/>
+                        <CheckBox Content="Auto Start" Margin="5" IsChecked="{Binding AutoStart}" />
+                        <CheckBox Content="Show in System Tray" Margin="5" IsChecked="{Binding ShowInSystemTray}" />
                     </StackPanel>
                 </Grid>
             </TabItem>

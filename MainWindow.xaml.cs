@@ -27,6 +27,9 @@ namespace System_Monitor
             InitializeComponent();
             ViewModel = new MetricsViewModel();
             DataContext = ViewModel;
+            var dataCollector = new AsyncDataCollector();
+            var logger = new SystemMetricsLogger(dataCollector);
+            _ = logger.StartLoggingAsync();
             ViewModel.StartAsync();
         }
         protected override void OnClosed(EventArgs e)

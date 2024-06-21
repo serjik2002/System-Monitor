@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal class AsyncDataCollector : IDisposable
+public class AsyncDataCollector : IDisposable
 {
     private readonly SystemMetricsCollector _metricsCollector;
     private readonly MetricsCache _metricsCache;
     private CancellationTokenSource _cancellationTokenSource;
     private bool _disposed = false;
+
+    public bool IsDisposed => _disposed;
 
     public AsyncDataCollector()
     {
@@ -45,6 +47,8 @@ internal class AsyncDataCollector : IDisposable
         {
             Console.WriteLine("Data collection canceled.");
         }
+
+        
     }
 
     public void StopCollecting()

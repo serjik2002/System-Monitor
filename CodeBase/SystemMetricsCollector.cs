@@ -73,7 +73,7 @@ internal class SystemMetricsCollector : IDisposable
 
     public float GetGpuMemory()
     {
-        var totalMemory = GetHardwareSensorValue(HardwareType.GpuAmd, SensorType.SmallData); // Replace with GpuAmd if you have an AMD GPU
+        var totalMemory = GetHardwareSensorValue(HardwareType.GpuNvidia, SensorType.SmallData); // Replace with GpuAmd if you have an AMD GPU
         if (totalMemory == -1)
         {
             return -1; // Handle sensor not found or unavailable
@@ -106,7 +106,7 @@ internal class SystemMetricsCollector : IDisposable
         return -1; // Повертаємо -1, якщо сенсор не знайдено
     }
 
-    public float GetGpuTemperature() => GetHardwareSensorValue(HardwareType.GpuAmd, SensorType.Temperature);
+    public float GetGpuTemperature() => GetHardwareSensorValue(HardwareType.GpuNvidia, SensorType.Temperature);
 
     public float GetRamUsage() => GetHardwareSensorValue(HardwareType.Memory, SensorType.Data);
     

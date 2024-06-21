@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.IO;
 using System.ComponentModel;
+using Microsoft.Win32;
+
+using System.Drawing;
 
 
 namespace System_Monitor.CodeBase
@@ -15,11 +18,12 @@ namespace System_Monitor.CodeBase
         private string _selectedMemoryUnit;
         private string _selectedSpeedUnit;
 
+        private bool _autoStart;
+        private bool _showInSystemTray;
+
         public string[] MemoryUnits { get; } = { "GB", "MB" };
         public string[] SpeedUnits { get; } = { "Mbps", "MB/s" };
 
-        public bool AutoStart { get; set; }
-        public bool ShowInSystemTray { get; set; }
         public string SelectedMetric { get; set; }
         public string SelectedFrequency { get; set; }
         public double NotificationThreshold { get; set; }
@@ -46,6 +50,50 @@ namespace System_Monitor.CodeBase
             }
         }
 
+        public bool AutoStart
+        {
+            get => _autoStart;
+            set
+            {
+                if (_autoStart != value)
+                {
+                    _autoStart = value;
+                    OnPropertyChanged(nameof(AutoStart));
+                    SetAutoStart(value);
+                }
+            }
+        }
+
+        public bool ShowInSystemTray
+        {
+            get => _showInSystemTray;
+            set
+            {
+                if (_showInSystemTray != value)
+                {
+                    _showInSystemTray = value;
+                    OnPropertyChanged(nameof(ShowInSystemTray));
+                }
+            }
+        }
+
+        private void SetAutoStart(bool autoStart)
+        {
+            string appName = "SystemMonitor"; // Название вашего приложения
+            string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
+            {
+                if (autoStart)
+                {
+                    key.SetValue(appName, $"\"{appPath}\"");
+                }
+                else
+                {
+                    key.DeleteValue(appName, false);
+                }
+            }
+        }
 
         // Сохранение настроек в JSON файл
         public void Save(string filePath)
