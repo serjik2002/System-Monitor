@@ -6,10 +6,12 @@ using LibreHardwareMonitor.Hardware;
 
 
 
-internal class SystemMetricsCollector : IDisposable
+public class SystemMetricsCollector : IDisposable
 {
     private bool _disposed = false;
     private readonly Computer _computer;
+
+    public bool IsDisposed => _disposed;
 
     public SystemMetricsCollector()
     {

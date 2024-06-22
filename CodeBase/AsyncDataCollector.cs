@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 public class AsyncDataCollector : IDisposable
 {
     private readonly SystemMetricsCollector _metricsCollector;
-    private readonly MetricsCache _metricsCache;
     private CancellationTokenSource _cancellationTokenSource;
     private bool _disposed = false;
 
@@ -15,10 +13,9 @@ public class AsyncDataCollector : IDisposable
     public AsyncDataCollector()
     {
         _metricsCollector = new SystemMetricsCollector();
-        _metricsCache = new MetricsCache();
     }
 
-    public async Task StartCollectingAsync(CancellationToken cancellationToken = default) // Додаємо CancellationToken
+    public async Task StartCollectingAsync(CancellationToken cancellationToken = default)
     {
         _cancellationTokenSource = new CancellationTokenSource();
         var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationTokenSource.Token);
@@ -30,14 +27,13 @@ public class AsyncDataCollector : IDisposable
             {
                 while (!token.IsCancellationRequested)
                 {
-                    try // Додаємо try-catch для обробки винятків
+                    try
                     {
-                        CollectMetrics();
+                        // Метрики собираются внутри логгера, поэтому здесь мы не делаем ничего
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error collecting metrics: {ex.Message}");
-                        // Додаткова обробка помилки (наприклад, логування)
                     }
                     await Task.Delay(1000, token);
                 }
@@ -47,8 +43,6 @@ public class AsyncDataCollector : IDisposable
         {
             Console.WriteLine("Data collection canceled.");
         }
-
-        
     }
 
     public void StopCollecting()
@@ -56,40 +50,7 @@ public class AsyncDataCollector : IDisposable
         _cancellationTokenSource?.Cancel();
     }
 
-    private void CollectMetrics()
-    {
-        float cpuUsage = _metricsCollector.GetCpuUsage();
-        float cpuFrequency = _metricsCollector.GetCpuFrequency();
-        float cpuTemperature = _metricsCollector.GetCpuTemperature();
-        float gpuLoad = _metricsCollector.GetGpuLoad();
-        float gpuMemory = _metricsCollector.GetGpuMemory();
-        float gpuFrequency = _metricsCollector.GetGpuFrequancy();
-        float gpuTemperature = _metricsCollector.GetGpuTemperature();
-        float ramUsage = _metricsCollector.GetRamUsage();
-        float totalMemory = _metricsCollector.GetTotalMemory();
-        float usedMemory = _metricsCollector.GetUsedMemory();
-        float sentBytesPerSecond = _metricsCollector.GetEthernetUploadSpeed();
-        float receivedBytesPerSecond = _metricsCollector.GetEthernetDownloadSpeed();
-
-
-        _metricsCache.UpdateMetrics(new Dictionary<string, float>
-    {
-        { "CPU Usage", cpuUsage },
-        { "CPU Frequency", cpuFrequency },
-        { "CPU Temperature", cpuTemperature },
-        { "GPU Load", gpuLoad },
-        { "GPU Memory", gpuMemory },
-        { "GPU Frequency", gpuFrequency },
-        { "GPU Temperature", gpuTemperature },
-        { "RAM Usage", ramUsage },
-        { "Total Memory", totalMemory },
-        { "Used Memory", usedMemory },
-        { "Sent Bytes Per Second", sentBytesPerSecond },
-        { "Received Bytes Per Second", receivedBytesPerSecond }
-    });
-    }
-
-    public MetricsCache GetMetricsCache() => _metricsCache;
+    public SystemMetricsCollector GetMetricsCollector() => _metricsCollector;
 
     public void Dispose()
     {
@@ -109,27 +70,5 @@ public class AsyncDataCollector : IDisposable
             }
             _disposed = true;
         }
-    }
-}
-public class MetricsCache
-{
-    private readonly Dictionary<string, float> _metrics = new Dictionary<string, float>();
-
-    public void UpdateMetrics(Dictionary<string, float> metrics)
-    {
-        foreach (var metric in metrics)
-        {
-            _metrics[metric.Key] = metric.Value;
-        }
-    }
-
-    public float GetMetric(string metricName)
-    {
-        return _metrics.TryGetValue(metricName, out float value) ? value : -1;
-    }
-
-    public Dictionary<string, float> GetAllMetrics()
-    {
-        return new Dictionary<string, float>(_metrics);
     }
 }

@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System_Monitor.CodeBase;
 
 namespace System_Monitor
@@ -22,26 +11,43 @@ namespace System_Monitor
     public partial class MainWindow : Window
     {
         public MetricsViewModel ViewModel { get; }
+        private AsyncDataCollector _dataCollector;
+        private SystemMetricsLogger _logger;
+
         public MainWindow()
         {
             InitializeComponent();
             ViewModel = new MetricsViewModel();
             DataContext = ViewModel;
-            var dataCollector = new AsyncDataCollector();
-            var logger = new SystemMetricsLogger(dataCollector);
-            _ = logger.StartLoggingAsync();
-            ViewModel.StartAsync();
+
+            // Инициализация и запуск сборщика данных и логгера
+            _dataCollector = new AsyncDataCollector();
+            _logger = new SystemMetricsLogger(_dataCollector.GetMetricsCollector());
+            StartLoggingAndDataCollection();
         }
+
+        private async void StartLoggingAndDataCollection()
+        {
+            // Запуск логирования и сбора данных параллельно
+            var viewModelTask = ViewModel.StartAsync();
+            var loggerTask = _logger.StartLoggingAsync();
+
+            await Task.WhenAll(viewModelTask, loggerTask);
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
+            // Остановка сбора данных при закрытии окна
             ViewModel.Stop();
+            _dataCollector.Dispose();
+            _logger.Dispose();
         }
+
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
             Settings settingsWindow = new Settings();
             settingsWindow.ShowDialog();
         }
-
     }
 }
